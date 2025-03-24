@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spam Classifier</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📧 Spam Email Classifier</h1>
+        <textarea id="emailText" placeholder="Paste an email here..."></textarea>
+        <button onclick="predictSpam()">Check</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        async function predictSpam() {
+            const email = document.getElementById('emailText').value;
+            if (!email) {
+                alert("Please enter an email!");
+                return;
+            }
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                });
+                const data = await response.json();
+                document.getElementById('result').innerText = `Result: ${data.result}`;
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById('result').innerText = "Error predicting. Check console.";
+            }
+        }
+    </script>
+</body>
+</html>
